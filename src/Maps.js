@@ -96,7 +96,8 @@ export default function Maps({ selectPosition, initialPosition}) {
       )}
     </MapContainer>
     </div>
-    <div className="absolute lg:relative lg:flex-none lg:w-64 bottom-10 right-10 lg:bottom-auto lg:right-auto bg-white bg-opacity-80 p-2 rounded-lg shadow-lg">
+    <div className="absolute lg:relative lg:flex-none lg:w-64 top-10 lg:top-auto right-10 lg:right-auto bg-white bg-opacity-80 p-2 rounded-lg shadow-lg">
+
      <div>Distance: {distance.toFixed(2)} km</div>
      <div>Time: {formatTime(time)}</div>
    </div>
