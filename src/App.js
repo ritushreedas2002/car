@@ -35,7 +35,7 @@ function App() {
   return (
    // app.js
 <div className="flex flex-col md:flex-row h-screen">
-  <div className="md:flex-1 w-full h-1/2 md:h-full overflow-auto">
+  <div className="md:flex-1 w-full h-1/4 md:h-[40%] overflow-auto">
     {/* Search box */}
     <SearchBox setSelectPosition={setSelectPosition} />
   </div>
