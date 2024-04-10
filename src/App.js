@@ -5,7 +5,10 @@ import SearchBox from './SearchBox';
 
 function App() {
   const [selectPosition, setSelectPosition] = useState(null);
-  const [initialPosition, setInitialPosition] = useState(null);
+  const [initialPosition, setInitialPosition] = useState({
+    lat: 51.505, // Default to London; will update to user's location
+    lon: -0.09,
+  });
 
   useEffect(() => {
     const watcher = navigator.geolocation.watchPosition(
@@ -15,7 +18,7 @@ function App() {
           lon: position.coords.longitude,
         };
         setInitialPosition(userLocation);
-        // setSelectPosition(userLocation);
+        setSelectPosition(userLocation);
       },
       function(error) {
         console.error("Error watching position:", error);

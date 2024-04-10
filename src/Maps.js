@@ -4,7 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
 
-const position = [51.505, -0.09]; // Default position (London)
+// const position = [51.505, -0.09]; // Default position (London)
 const icon = L.icon({
   iconUrl: "./placeholder.png",
   iconSize: [38, 38],
@@ -73,12 +73,12 @@ export default function Maps({ selectPosition, initialPosition }) {
 
     return `${hours}h ${minutes}min`;
   };
-
+  console.log(initialPosition)
   return (
     <div className="relative flex flex-col lg:flex-row h-[600px]">
       <div className="flex-1 z-0">
         <MapContainer
-          center={position}
+          center={initialPosition||selectPosition}
           zoom={13}
           style={{ width: "100%", height: "100%" }}
         >
@@ -100,7 +100,7 @@ export default function Maps({ selectPosition, initialPosition }) {
           {initialPosition && selectPosition && (
             <Routing
               start={initialPosition}
-              end={selectPosition}
+              end={selectPosition||initialPosition}
               onDistanceChange={handleDistanceChange}
             />
           )}
