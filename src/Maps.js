@@ -76,7 +76,8 @@ export default function Maps({ selectPosition, initialPosition}) {
   };
 
   return (
-    <div style={{ position: 'relative', height: '600px' }}>
+    <div className="relative flex flex-col lg:flex-row h-[600px]">
+    <div className="flex-1">
     <MapContainer center={position} zoom={13} style={{ width: "100%", height: "100%" }}>
       <TileLayer
         attribution='&copy; <a href="https://www.penstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -94,11 +95,12 @@ export default function Maps({ selectPosition, initialPosition}) {
         
       )}
     </MapContainer>
-     <div style={{ bottom: '10px', right: '10px', background: 'rgba(255, 255, 255, 0.8)', padding: '8px', borderRadius: '5px' }}>
+    </div>
+    <div className="absolute lg:relative lg:flex-none lg:w-64 bottom-10 right-10 lg:bottom-auto lg:right-auto bg-white bg-opacity-80 p-2 rounded-lg shadow-lg">
      <div>Distance: {distance.toFixed(2)} km</div>
      <div>Time: {formatTime(time)}</div>
    </div>
- </div>
+   </div>
   );
 }
 
