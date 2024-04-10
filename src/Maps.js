@@ -97,6 +97,17 @@ export default function Maps({ selectPosition, initialPosition }) {
               </Popup>
             </Marker>
           )}
+          {initialPosition &&
+          <Marker
+          position={[selectPosition.lat, selectPosition.lon]}
+          icon={icon}
+        >
+          <Popup>
+            Selected Location. <br /> Distance from initial position:{" "}
+            {distance.toFixed(2)} km
+          </Popup>
+        </Marker>
+          }
           {initialPosition && selectPosition && (
             <Routing
               start={initialPosition}
