@@ -1,182 +1,101 @@
-// import {
-//   useJsApiLoader,
-//   GoogleMap,
-//   Marker,
-//   Autocomplete,
-//   DirectionsRenderer,
-// } from '@react-google-maps/api'
-// import { useRef, useState } from 'react'
-// const App = () => {
-//   const [origin, setOrigin] = useState('');
-//   const [destination, setDestination] = useState('');
-//   const [directionsResponse, setDirectionsResponse] = useState(null);
 
-//   const { isLoaded } = useJsApiLoader({
-//     googleMapsApiKey:"AIzaSyCji7vNSIbm_qKVlL0Xs85JYRQvthyYW8M",
-//     libraries: ['places'],
-//   })
+import React, { useEffect, useState } from 'react';
+import Maps from './Maps';
+import SearchBox from './SearchBox';
 
-//   if(!isLoaded){
-//     return <p>Loading------</p>
-//   }
+function App() {
+  const [selectPosition, setSelectPosition] = useState(null);
+  const [initialPosition, setInitialPosition] = useState(null);
+
+  useEffect(() => {
+    const watcher = navigator.geolocation.watchPosition(
+      function(position) {
+        const userLocation = {
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        };
+        setInitialPosition(userLocation);
+        setSelectPosition(userLocation);
+      },
+      function(error) {
+        console.error("Error watching position:", error);
+      },
+      {
+        enableHighAccuracy: true, // Whether to use GPS or other methods for location tracking
+        timeout: 10000, // Maximum time in milliseconds before erroring
+        maximumAge: 0 // Maximum age of a cached location before it's ignored
+      }
+    );
+  
+    // Clean up the watcher when the component unmounts
+    return () => navigator.geolocation.clearWatch(watcher);
+  }, []);
+  
+
+  return (
+    <div className="flex flex-col md:flex-row h-screen">
+  <div className="w-full md:w-4/5 h-full">
+    {/* Map component */}
+    <Maps selectPosition={selectPosition} initialPosition={initialPosition} />
+  </div>
+  <div className="w-full md:w-1/5 h-1/2 md:h-full overflow-auto">
+    {/* Search box */}
+    <SearchBox setSelectPosition={setSelectPosition} />
+  </div>
+</div>
+
+  );
+}
+
+export default App;
+
+
+// App.js
+// import React, { useEffect, useState } from 'react';
+// import Maps from './Maps';
+// import SearchBox from './SearchBox';
+// import { calculateDistance } from './utils'; // Make sure this path is correct
+
+// function App() {
+//   const [selectPosition, setSelectPosition] = useState(null);
+//   const [initialPosition, setInitialPosition] = useState(null);
+//   const [distance, setDistance] = useState(0); // New state to store the distance
+
+//   useEffect(() => {
+//     navigator.geolocation.getCurrentPosition(function(position) {
+//       const userLocation = {
+//         lat: position.coords.latitude,
+//         lon: position.coords.longitude,
+//       };
+//       setInitialPosition(userLocation);
+//       setSelectPosition(userLocation);
+//     });
+//   }, []);
+
+//   // Modify setSelectPosition to calculate and set the distance as well
+//   const handleSetSelectPosition = (position) => {
+//     setSelectPosition(position);
+//     if (initialPosition) {
+//       const dist = calculateDistance(initialPosition.lat, initialPosition.lon, position.lat, position.lon);
+//       setDistance(dist); // Set the calculated distance
+//       console.log(dist);
+//     }
+//   };
 
 //   return (
-
-//     <div className="container mx-auto">
-//       <div className="my-4">
-//         <input
-//           className="border-2 border-gray-200 p-2 mr-2"
-//           type="text"
-//           placeholder="Origin"
-//           value={origin}
-//           onChange={(e) => setOrigin(e.target.value)}
-//         />
-//         <input
-//           className="border-2 border-gray-200 p-2 mr-2"
-//           type="text"
-//           placeholder="Destination"
-//           value={destination}
-//           onChange={(e) => setDestination(e.target.value)}
-//         />
-//         <button
-//           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-
-//         >
-//           Calculate
-//         </button>
+//     <div style={{ display: "flex", height: "100vh" }}>
+//       <div style={{ width: "80%" }}>
+//         <Maps selectPosition={selectPosition} initialPosition={initialPosition} distance={distance} />
 //       </div>
-//       <GoogleMap
-//           center={{ lat: 0, lng: 0 }}
-//           zoom={15}
-//           mapContainerStyle={{ width: '100%', height: '100%' }}
-//           options={{
-//             zoomControl: false,
-//             streetViewControl: false,
-//             mapTypeControl: false,
-//             fullscreenControl: false,
-//           }}
-//           />
+//       <div style={{ width: "20%" }}>
+//         <SearchBox setSelectPosition={handleSetSelectPosition} />
+//       </div>
 //     </div>
 //   );
-// };
+// }
 
 // export default App;
 
-import {
-  useJsApiLoader,
-  GoogleMap,
-  Marker,
-  Autocomplete,
-  DirectionsRenderer,
-} from "@react-google-maps/api";
-import { useRef, useState } from "react";
-import { CiLocationArrow1 } from "react-icons/ci";
-const App = () => {
-  const [origin, setOrigin] = useState("");
-  const [destination, setDestination] = useState("");
-  const [map, setMap] = useState(/** @type google.maps.Map */ (null));
-  const center = { lat: 48.8584, lng: 2.2945 };
-  const autocompleteOriginRef = useRef(null);
-  const autocompleteDestinationRef = useRef(null);
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyCji7vNSIbm_qKVlL0Xs85JYRQvthyYW8M", // Ensure this is your API key
-    libraries: ["places"],
-  });
-
-  // Error handling for API load issues
-  if (loadError) {
-    return <div>Error loading maps</div>;
-  }
-  if (!isLoaded) {
-    return <div>Loading maps...</div>;
-  }
 
 
-  const onOriginPlaceChanged = () => {
-    if (autocompleteOriginRef.current) {
-      const place = autocompleteOriginRef.current.getPlace();
-      // Update your state or do something with the place object
-      console.log(place);
-    }
-  };
 
-  const onDestinationPlaceChanged = () => {
-    if (autocompleteDestinationRef.current) {
-      const place = autocompleteDestinationRef.current.getPlace();
-      // Update your state or do something with the place object
-      console.log(place);
-    }
-  };
-
-  return (
-    <div className="container mx-auto p-4 relative h-screen">
-      {" "}
-      {/* Ensure the parent has a defined height */}
-      <div
-        className="absolute top-0 z-10 bg-white p-4 shadow-md flex"
-        style={{ width: "100%" }}
-      >
-        {" "}
-        {/* Use z-index to ensure form is above map */}
-        <Autocomplete
-            onLoad={(ref) => (autocompleteOriginRef.current = ref)}
-            onPlaceChanged={onOriginPlaceChanged}
-          >
-        <input
-          className="border-2 border-gray-200 p-2 mr-2"
-          type="text"
-          placeholder="Origin"
-          value={origin}
-          onChange={(e) => setOrigin(e.target.value)}
-        />
-        </Autocomplete>
-        <Autocomplete
-            onLoad={(ref) => (autocompleteDestinationRef.current = ref)}
-            onPlaceChanged={onDestinationPlaceChanged}
-          >
-        <input
-          className="border-2 border-gray-200 p-2 mr-2"
-          type="text"
-          placeholder="Destination"
-          value={destination}
-          onChange={(e) => setDestination(e.target.value)}
-        />
-        </Autocomplete>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Calculate
-        </button>
-        <div className="flex ">
-          <div className="ml-14">Duration:</div>
-          <div className="ml-36">Time taken:</div>
-          <CiLocationArrow1
-            className="ml-44 cursor-pointer"
-            onClick={() => {
-              map.panTo(center);
-              map.setZoom(15);
-            }}
-          />
-        </div>
-      </div>
-      <div className="absolute top-0 left-0 right-0 bottom-0 w-[100%] h-[100%]">
-        {" "}
-        {/* This ensures the map fills the parent container */}
-        <GoogleMap
-          center={center}
-          zoom={15}
-          mapContainerStyle={{ width: "100%", height: "100%" }}
-          options={{
-            zoomControl: false,
-            streetViewControl: false,
-            mapTypeControl: false,
-            fullscreenControl: false,
-          }}
-          onLoad={(map) => setMap(map)}
-        >
-          <Marker position={center} />
-        </GoogleMap>
-      </div>
-    </div>
-  );
-};
-
-export default App;
