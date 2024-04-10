@@ -33,16 +33,18 @@ function App() {
   
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
-  <div className="w-full md:w-4/5 h-full">
-    {/* Map component */}
-    <Maps selectPosition={selectPosition} initialPosition={initialPosition} />
-  </div>
-  <div className="w-full md:w-1/5 h-1/2 md:h-full overflow-auto">
+   // app.js
+<div className="flex flex-col md:flex-row h-screen">
+  <div className="md:flex-1 w-full h-1/2 md:h-full overflow-auto">
     {/* Search box */}
     <SearchBox setSelectPosition={setSelectPosition} />
   </div>
+  <div className="flex-1 w-full h-1/2 md:h-full">
+    {/* Map component */}
+    <Maps selectPosition={selectPosition} initialPosition={initialPosition} />
+  </div>
 </div>
+
 
   );
 }
