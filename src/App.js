@@ -18,7 +18,7 @@ function App() {
           lon: position.coords.longitude,
         };
         setInitialPosition(userLocation);
-        setSelectPosition(userLocation);
+        //setSelectPosition(userLocation);
       },
       function(error) {
         console.error("Error watching position:", error);
